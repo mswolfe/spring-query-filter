@@ -17,6 +17,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.wolfe.query.QueryParamFilter;
+import org.wolfe.query.pattern.QueryFilterPatternProvider;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -27,15 +28,17 @@ import java.util.regex.Pattern;
 public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String FILTER_QUERY_PARAMETER = "filter";
-    private static final String FILTER_REGEX = "'(.+?)(>=|<=|=|<|>)(.+?)(?:&(.+?)(>=|<=|=|<|>)(.+?))*'";
-    private static final Pattern FILTER_PATTERN = Pattern.compile(FILTER_REGEX);
+    private final Pattern filterPattern;
+    private final String filterParameterDelimiter;
 
     private final ConversionService conversionService;
 
     private static final Log log = LogFactory.getLog(QueryFilterHandlerMethodArgumentResolver.class);
 
     @Autowired
-    public QueryFilterHandlerMethodArgumentResolver(ConversionService conversionService) {
+    public QueryFilterHandlerMethodArgumentResolver(QueryFilterPatternProvider queryFilterPatternProvider, ConversionService conversionService) {
+        this.filterPattern = queryFilterPatternProvider.getPattern();
+        this.filterParameterDelimiter = queryFilterPatternProvider.getParameterDelimiter();
         this.conversionService = conversionService;
     }
 
@@ -46,30 +49,37 @@ public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodAr
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         Object arg = parameter.getParameterType().newInstance();
 
+        // 1. Grab the filter query parameter and strip the apostrophe from the start and end
+        // 2. Split the string based upon the parameter delimiter
+        // 3. Use the pattern regex to match each parameter, "<key><op><value>"
+        // 4. Try to populate the key's property in the target object.
         String filter = webRequest.getParameter(FILTER_QUERY_PARAMETER);
-        if(!StringUtils.isEmpty(filter)) {
-            Matcher matcher = FILTER_PATTERN.matcher(filter);
-            if(matcher.matches() && matcher.groupCount() % 3 == 0) {
-                int i = 1;
-                do {
-                    String key = matcher.group(i);
-                    String op = matcher.group(i+1);
-                    String value = matcher.group(i+2);
-
-                    // Silly java regex implementation returns null for optional
-                    // groups instead of not matching them at all...
-                    if(key != null && op != null && value != null) {
-                        setFilterProperty(arg, key, op, value);
-                        setFilterOperatorProperty(arg, key, op, value);
-                    }
-
-                    i += 3;
-                } while(i < matcher.groupCount());
+        if(!StringUtils.isEmpty(filter) && filter.length() > 2 && filter.startsWith("'") && filter.endsWith("'")) {
+            String withOutParens = filter.substring(1, filter.length() - 1);
+            String[] params = withOutParens.split(filterParameterDelimiter);
+            if(log.isInfoEnabled()) {
+                log.info(String.format("Found %s filter query parameters", params.length));
             }
-            else {
-                if(log.isWarnEnabled()) {
-                    log.warn("filter query parameter could not be parsed successfully.");
+
+            for(String param : params) {
+                Matcher matcher = filterPattern.matcher(param);
+                if (matcher.matches() && matcher.groupCount() == 3) {
+                    String key = matcher.group(1);
+                    String op = matcher.group(2);
+                    String value = matcher.group(3);
+
+                    setFilterProperty(arg, key, op, value);
+                    setFilterOperatorProperty(arg, key, op, value);
+                } else {
+                    if (log.isWarnEnabled()) {
+                        log.warn(String.format("Failed to parse filter query parameter '%s'", param));
+                    }
                 }
+            }
+        }
+        else {
+            if(log.isWarnEnabled()) {
+                log.warn(String.format("Failed to trim apostrophes from the filter '%s'", filter));
             }
         }
 
