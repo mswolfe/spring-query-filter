@@ -2,6 +2,7 @@ group 'org.wolfe'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'groovy'
 
 sourceCompatibility = 1.8
 
@@ -10,10 +11,15 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.springframework', name: 'spring-framework-bom', version: '4.3.2'
-    compile group: 'org.springframework', name: 'spring-context', version: '4.3.2.RELEASE'
-    compile group: 'org.springframework', name: 'spring-web', version: '4.3.2.RELEASE'
-    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.3.2.RELEASE'
+    compile 'org.springframework:spring-framework-bom:4.3.2.RELEASE'
+    compile 'org.springframework:spring-context:4.3.2.RELEASE'
+    compile 'org.springframework:spring-web:4.3.2.RELEASE'
+    compile 'org.springframework:spring-webmvc:4.3.2.RELEASE'
 
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'commons-beanutils:commons-beanutils-core:1.8.3'
+
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.1'
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    testRuntime 'cglib:cglib-nodep:3.1'
+    testRuntime 'org.objenesis:objenesis:2.1'
 }
