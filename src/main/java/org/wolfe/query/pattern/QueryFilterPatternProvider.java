@@ -12,7 +12,15 @@ public interface QueryFilterPatternProvider {
 
     /**
      * Returns the delimiter that separates each filter parameter.
+     *
      * @return
      */
     String getParameterDelimiter();
+
+    /**
+     * Returns the name of the parameter to use during argument resolution.
+     *
+     * @return
+     */
+    String getParameterName();
 }

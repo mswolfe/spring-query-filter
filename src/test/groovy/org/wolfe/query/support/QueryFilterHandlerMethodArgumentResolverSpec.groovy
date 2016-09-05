@@ -2,6 +2,7 @@ package org.wolfe.query.support
 
 import org.springframework.core.MethodParameter
 import org.springframework.core.convert.support.DefaultConversionService
+import org.springframework.validation.Validator
 import org.springframework.web.context.request.NativeWebRequest
 import org.wolfe.query.pattern.DefaultQueryFilterPatternProvider
 import spock.lang.Shared
@@ -16,6 +17,11 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
     @Shared
     def conversionService = new DefaultConversionService()
 
+    @Shared
+    def validator = Mock(Validator) {
+        supports(_) >> true
+    }
+
     def "Ensure resolveArgument splits on operator '#op' correctly"() {
         given:
         def parameter = Mock(MethodParameter) {
@@ -26,7 +32,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         }
         def mavContainer = null
         def binderFactory = null
-        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService)
+        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
         def result = resolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory)
@@ -55,7 +61,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         }
         def mavContainer = null
         def binderFactory = null
-        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService)
+        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
         def result = resolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory)
@@ -85,7 +91,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         }
         def mavContainer = null
         def binderFactory = null
-        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService)
+        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
         def result = resolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory)
@@ -107,7 +113,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         }
         def mavContainer = null
         def binderFactory = null
-        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService)
+        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
         def result = resolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory)
@@ -131,7 +137,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         }
         def mavContainer = null
         def binderFactory = null
-        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService)
+        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
         def result = resolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory)
@@ -157,7 +163,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         }
         def mavContainer = null
         def binderFactory = null
-        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService)
+        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
         def result = resolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory)
@@ -174,7 +180,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         def key = "name"
         def op = "="
         def value = "bob"
-        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService)
+        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
         def result = resolver.setFilterProperty(target, key, op, value)
@@ -190,7 +196,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         def key = "name"
         def op = "="
         def value = "bob"
-        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService)
+        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
         def result = resolver.setFilterProperty(target, key, op, value)
@@ -206,7 +212,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         def key = "name"
         def op = "="
         def value = "bob"
-        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService)
+        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
         def result = resolver.setFilterOperatorProperty(target, key, op, value)
@@ -222,7 +228,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         def key = "name"
         def op = "="
         def value = "bob"
-        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService)
+        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
         def result = resolver.setFilterOperatorProperty(target, key, op, value)
@@ -238,7 +244,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         def key = "name"
         def op = "="
         def value = "bob"
-        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService)
+        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
         def result = resolver.setFilterOperatorProperty(target, key, op, value)
@@ -253,7 +259,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         def key = "name"
         def op = "="
         def value = "bob"
-        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService)
+        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
         def result = resolver.setBeanProperty(target, key, value)
@@ -269,7 +275,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         def key = "name"
         def op = "="
         def value = "bob"
-        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService)
+        def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
         def result = resolver.setBeanProperty(target, key, value)

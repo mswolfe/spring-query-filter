@@ -14,6 +14,8 @@ public class DefaultQueryFilterPatternProvider implements QueryFilterPatternProv
 
     private static final String FILTER_PARAMETER_DELIMITER = "&";
 
+    private static final String FILTER_PARAMETER_NAME = "filter";
+
     private final Pattern FILTER_PATTERN;
 
     public DefaultQueryFilterPatternProvider() {
@@ -36,5 +38,10 @@ public class DefaultQueryFilterPatternProvider implements QueryFilterPatternProv
 
     public String getFilterComparisonRegex() {
         return FILTER_COMPARISON_REGEX;
+    }
+
+    @Override
+    public String getParameterName() {
+        return FILTER_PARAMETER_NAME;
     }
 }
