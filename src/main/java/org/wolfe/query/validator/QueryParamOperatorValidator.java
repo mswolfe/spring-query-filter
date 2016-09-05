@@ -1,10 +1,6 @@
 package org.wolfe.query.validator;
 
-import com.sun.istack.internal.NotNull;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 import org.wolfe.query.QueryParamOperator;
 
 import javax.validation.ConstraintValidator;
@@ -21,7 +17,7 @@ public class QueryParamOperatorValidator implements ConstraintValidator<QueryPar
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if(!StringUtils.isEmpty(value)) {
+        if (!StringUtils.isEmpty(value)) {
             for (String ap : allowedParams) {
                 if (value.equals(ap)) {
                     return true;
