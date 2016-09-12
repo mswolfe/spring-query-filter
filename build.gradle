@@ -1,8 +1,10 @@
-group 'org.wolfe'
+group 'com.github.mswolfe'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.8
 
@@ -23,4 +25,71 @@ dependencies {
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testRuntime 'cglib:cglib-nodep:3.1'
     testRuntime 'org.objenesis:objenesis:2.1'
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
+                authentication(userName: ossrhUsername ?: '', password: ossrhPassword ?: '')
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                authentication(userName: ossrhUsername ?: '', password: ossrhPassword ?: '')
+            }
+
+            pom.project {
+                name 'Spring Query Filter'
+                packaging 'jar'
+                description "A library that provides parsing for the 'filter' query parameter"
+                url 'https://github.com/mswolfe/spring-query-filter'
+
+                issueManagement {
+                    url 'https://github.com/mswolfe/spring-query-filter/issues'
+                    system 'GitHub Issues'
+                }
+
+                scm {
+                    connection 'scm:git:git://github.com/mswolfe/spring-query-filter.git'
+                    developerConnection 'scm:git:git@github.com:mswolfe/spring-query-filter.git'
+                    url 'https://github.com/mswolfe/spring-query-filter'
+                }
+
+                licenses {
+                    license {
+                        name 'MIT License'
+                        url 'https://github.com/mswolfe/spring-query-filter/blob/master/LICENSE'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'mswolfe'
+                        name 'Michael Wolfe'
+                        email 'mwooolfe@gmail.com'
+                    }
+                }
+            }
+        }
+    }
 }
