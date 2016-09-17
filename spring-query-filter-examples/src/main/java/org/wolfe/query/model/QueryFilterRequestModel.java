@@ -6,17 +6,33 @@ import org.wolfe.query.QueryParamOperator;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * Object's must be standard POJO's with setter's for any fields
+ * that need to be populated.
+ */
 public class QueryFilterRequestModel {
 
+    /**
+     * JSR-303 constraints are validated.
+     */
     @NotNull
     private String id;
 
+    /**
+     * We can validate the @QueryParamOperator on the
+     * key property itself.
+     */
     @NotEmpty
+    @QueryParamOperator(allowed = "=")
     private String email;
 
-    @QueryParamOperator(allowed = {">", "<"})
     private float balance;
 
+    /**
+     * We can also validate the @QueryParamOperator on the
+     * operator property too.
+     */
+    @QueryParamOperator(allowed = {">", "<"})
     private String balanceOperator;
 
     public String getId() {
