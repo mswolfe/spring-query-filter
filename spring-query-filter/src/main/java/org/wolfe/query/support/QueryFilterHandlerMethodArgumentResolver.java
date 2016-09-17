@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -158,7 +159,9 @@ public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodAr
 
             }
 
-            // Perform custom annotation validation
+            // Perform custom annotation validation, we do this because we want to support placing
+            // the QueryParamOperator annotation on the property that stores the value and not force
+            // users to always define a property that stores the operator.
             QueryParamOperatorValidator queryParamOperatorValidator = new QueryParamOperatorValidator();
             for (Field f : parameter.getParameterType().getDeclaredFields()) {
                 for (Annotation a : f.getAnnotations()) {
@@ -214,6 +217,7 @@ public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodAr
      * @param value
      * @return
      */
+    @SuppressWarnings("unchecked")
     private boolean setBeanProperty(Object target, String name, String value) {
         PropertyAccessor accessor = PropertyAccessorFactory.forBeanPropertyAccess(target);
         if (accessor != null && accessor.isWritableProperty(name)) {
