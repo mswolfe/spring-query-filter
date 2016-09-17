@@ -183,7 +183,7 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
-        def result = resolver.setFilterProperty(target, key, op, value)
+        def result = resolver.setFilterProperty(target, key, value)
 
         then:
         result == true
@@ -199,55 +199,52 @@ class QueryFilterHandlerMethodArgumentResolverSpec extends Specification {
         def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
-        def result = resolver.setFilterProperty(target, key, op, value)
+        def result = resolver.setFilterProperty(target, key, value)
 
         then:
         result == false
         target.name == null
     }
 
-    def "Ensure setFilterOperatorProperty populates the value correctly"() {
+    def "Ensure setFilterProperty populates the operator value correctly"() {
         given:
         def target = new QueryFilterMethodObject()
-        def key = "name"
+        def key = "nameOperator"
         def op = "="
-        def value = "bob"
         def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
-        def result = resolver.setFilterOperatorProperty(target, key, op, value)
+        def result = resolver.setFilterProperty(target, key, op)
 
         then:
         result == true
         target.nameOperator == "="
     }
 
-    def "Ensure setFilterOperatorProperty fails to populate the value when the object is missing a setter"() {
+    def "Ensure setFilterProperty fails to populate the operator value when the object is missing a setter"() {
         given:
         def target = new QueryFilterFieldObject()
-        def key = "name"
+        def key = "nameOperator"
         def op = "="
-        def value = "bob"
         def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
-        def result = resolver.setFilterOperatorProperty(target, key, op, value)
+        def result = resolver.setFilterProperty(target, key, op)
 
         then:
         result == false
         target.nameOperator == null
     }
 
-    def "Ensure setFilterOperatorProperty fails to populate the value when there is no property"() {
+    def "Ensure setFilterProperty fails to populate the value when there is no property"() {
         given:
         def target = new QueryFilterNoOperatorObject()
-        def key = "name"
+        def key = "nameOperator"
         def op = "="
-        def value = "bob"
         def resolver = new QueryFilterHandlerMethodArgumentResolver(patternProvider, conversionService, validator)
 
         when:
-        def result = resolver.setFilterOperatorProperty(target, key, op, value)
+        def result = resolver.setFilterProperty(target, key, op)
 
         then:
         result == false

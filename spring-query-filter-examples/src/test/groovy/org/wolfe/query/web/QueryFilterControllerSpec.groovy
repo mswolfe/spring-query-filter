@@ -64,7 +64,7 @@ class QueryFilterControllerSpec extends Specification {
         data.balanceOperator == ">"
     }
 
-    def "standardQueryWithValidation should return a 400 Bad Request when id is null"() {
+    def "standardQueryWithValid should return a 400 Bad Request when id is null"() {
         given:
         def filter = "'email=bob@aol.com&balance>50'"
 
@@ -73,13 +73,28 @@ class QueryFilterControllerSpec extends Specification {
         http.handler.failure = {
             resp -> status = resp.status
         }
-        http.get(path: "/validate", query: [filter:filter])
+        http.get(path: "/valid", query: [filter:filter])
 
         then:
         status == HttpStatus.SC_BAD_REQUEST
     }
 
-    def "standardQueryWithValidation should return a 400 Bad Request when email is blank"() {
+    def "standardQueryWithValidated should return a 400 Bad Request when id is null"() {
+        given:
+        def filter = "'email=bob@aol.com&balance>50'"
+
+        when:
+        int status
+        http.handler.failure = {
+            resp -> status = resp.status
+        }
+        http.get(path: "/validated", query: [filter:filter])
+
+        then:
+        status == HttpStatus.SC_BAD_REQUEST
+    }
+
+    def "standardQueryWithValid should return a 400 Bad Request when email is blank"() {
         given:
         def filter = "'id=12345&email=&balance>50'"
 
@@ -88,13 +103,13 @@ class QueryFilterControllerSpec extends Specification {
         http.handler.failure = {
             resp -> status = resp.status
         }
-        http.get(path: "/validate", query: [filter:filter])
+        http.get(path: "/valid", query: [filter:filter])
 
         then:
         status == HttpStatus.SC_BAD_REQUEST
     }
 
-    def "standardQueryWithValidation should return a 400 Bad Request when balance operator is invalid"() {
+    def "standardQueryWithValid should return a 400 Bad Request when balance operator is invalid"() {
         given:
         def filter = "'id=12345&email=bob@aol.com&balance=50'"
 
@@ -103,10 +118,24 @@ class QueryFilterControllerSpec extends Specification {
         http.handler.failure = {
             resp -> status = resp.status
         }
-        http.get(path: "/validate", query: [filter:filter])
+        http.get(path: "/valid", query: [filter:filter])
 
         then:
         status == HttpStatus.SC_BAD_REQUEST
     }
 
+    def "standardQueryWithValid should return a 400 Bad Request when email operator is invalid"() {
+        given:
+        def filter = "'id=12345&email>bob@aol.com&balance=50'"
+
+        when:
+        int status
+        http.handler.failure = {
+            resp -> status = resp.status
+        }
+        http.get(path: "/valid", query: [filter:filter])
+
+        then:
+        status == HttpStatus.SC_BAD_REQUEST
+    }
 }
