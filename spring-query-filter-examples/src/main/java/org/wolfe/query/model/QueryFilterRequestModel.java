@@ -14,9 +14,9 @@ public class QueryFilterRequestModel {
     @NotEmpty
     private String email;
 
+    @QueryParamOperator(allowed = {">", "<"})
     private float balance;
 
-    @QueryParamOperator(allowed = {">", "<"})
     private String balanceOperator;
 
     public String getId() {
