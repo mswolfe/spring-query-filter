@@ -8,12 +8,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.FIELD)
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = QueryParamOperatorValidator.class)
-public @interface QueryParamOperator {
-
-    String message() default "operator not supported";
-
-    String[] allowed() default {};
+public @interface QueryParamFilter {
 }
