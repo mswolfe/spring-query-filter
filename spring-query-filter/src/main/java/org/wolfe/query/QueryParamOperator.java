@@ -3,6 +3,7 @@ package org.wolfe.query;
 import org.wolfe.query.validator.QueryParamOperatorValidator;
 
 import javax.validation.Constraint;
+import javax.validation.Payload;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -16,4 +17,8 @@ public @interface QueryParamOperator {
     String message() default "operator not supported";
 
     String[] allowed() default {};
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

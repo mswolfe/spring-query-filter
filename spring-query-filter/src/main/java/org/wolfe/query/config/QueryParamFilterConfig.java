@@ -12,10 +12,10 @@ import java.util.List;
 public class QueryParamFilterConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
-    private QueryFilterHandlerMethodArgumentResolver resolver;
+    private QueryFilterHandlerMethodArgumentResolver queryFilterHandlerMethodArgumentResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(resolver);
+        argumentResolvers.add(queryFilterHandlerMethodArgumentResolver);
     }
 }
