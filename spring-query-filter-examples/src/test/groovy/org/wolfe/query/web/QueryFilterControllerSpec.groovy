@@ -1,19 +1,18 @@
 package org.wolfe.query.web
 
-import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 import org.apache.http.HttpStatus
-import org.springframework.beans.factory.annotation.Autowire
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.SpringApplicationContextLoader
+import org.springframework.boot.test.WebIntegrationTest
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.web.context.WebApplicationContext
 import org.wolfe.Application
 import spock.lang.Specification
 
-@ContextConfiguration
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application)
+@ContextConfiguration(loader = SpringApplicationContextLoader, classes = Application)
+@WebIntegrationTest
 class QueryFilterControllerSpec extends Specification {
 
     @Value('${local.server.port}')
@@ -38,7 +37,7 @@ class QueryFilterControllerSpec extends Specification {
         def filter = "'id=12345'"
 
         when:
-        def (status, data) = http.get(path: "/query", query: [filter:filter]) {
+        def (status, data) = http.get(path: "/query", query: [filter: filter]) {
             resp, reader -> [resp.status, reader]
         }
 
@@ -52,7 +51,7 @@ class QueryFilterControllerSpec extends Specification {
         def filter = "'id=12345&email=bob@aol.com&balance>50'"
 
         when:
-        def (status, data) = http.get(path: "/query", query: [filter:filter]) {
+        def (status, data) = http.get(path: "/query", query: [filter: filter]) {
             resp, reader -> [resp.status, reader]
         }
 
@@ -73,7 +72,7 @@ class QueryFilterControllerSpec extends Specification {
         http.handler.failure = {
             resp -> status = resp.status
         }
-        http.get(path: "/valid", query: [filter:filter])
+        http.get(path: "/valid", query: [filter: filter])
 
         then:
         status == HttpStatus.SC_BAD_REQUEST
@@ -88,7 +87,7 @@ class QueryFilterControllerSpec extends Specification {
         http.handler.failure = {
             resp -> status = resp.status
         }
-        http.get(path: "/validated", query: [filter:filter])
+        http.get(path: "/validated", query: [filter: filter])
 
         then:
         status == HttpStatus.SC_BAD_REQUEST
@@ -103,7 +102,7 @@ class QueryFilterControllerSpec extends Specification {
         http.handler.failure = {
             resp -> status = resp.status
         }
-        http.get(path: "/valid", query: [filter:filter])
+        http.get(path: "/valid", query: [filter: filter])
 
         then:
         status == HttpStatus.SC_BAD_REQUEST
@@ -118,7 +117,7 @@ class QueryFilterControllerSpec extends Specification {
         http.handler.failure = {
             resp -> status = resp.status
         }
-        http.get(path: "/valid", query: [filter:filter])
+        http.get(path: "/valid", query: [filter: filter])
 
         then:
         status == HttpStatus.SC_BAD_REQUEST
@@ -133,7 +132,7 @@ class QueryFilterControllerSpec extends Specification {
         http.handler.failure = {
             resp -> status = resp.status
         }
-        http.get(path: "/valid", query: [filter:filter])
+        http.get(path: "/valid", query: [filter: filter])
 
         then:
         status == HttpStatus.SC_BAD_REQUEST

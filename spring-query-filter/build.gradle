@@ -12,11 +12,15 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    springVersion = '4.2.3.RELEASE'
+}
+
 dependencies {
-    compile 'org.springframework:spring-framework-bom:4.3.2.RELEASE'
-    compile 'org.springframework:spring-context:4.3.2.RELEASE'
-    compile 'org.springframework:spring-web:4.3.2.RELEASE'
-    compile 'org.springframework:spring-webmvc:4.3.2.RELEASE'
+    compile "org.springframework:spring-framework-bom:${springVersion}"
+    compile "org.springframework:spring-context:${springVersion}"
+    compile "org.springframework:spring-web:${springVersion}"
+    compile "org.springframework:spring-webmvc:${springVersion}"
 
     compile 'commons-beanutils:commons-beanutils-core:1.8.3'
     compile 'javax.validation:validation-api:1.1.0.Final'
@@ -52,11 +56,13 @@ uploadArchives {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
-                authentication(userName: project.findProperty('ossrhUsername') ?: '', password: project.findProperty('ossrhPassword') ?: '')
+                authentication(userName: project.hasProperty('ossrhUsername') ? project.property('ossrhUsername') : '',
+                        password: project.hasProperty('ossrhPassword') ? project.property('ossrhPassword') : '')
             }
 
             snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
-                authentication(userName: project.findProperty('ossrhUsername') ?: '', password: project.findProperty('ossrhPassword') ?: '')
+                authentication(userName: project.hasProperty('ossrhUsername') ? project.property('ossrhUsername') : '',
+                        password: project.hasProperty('ossrhPassword') ? project.property('ossrhPassword') : '')
             }
 
             pom.project {
