@@ -105,3 +105,4 @@ API changes will follow SEMVER and loosly the Spring Framework releases.
 | ------------- | ------------- |
 | 4.2.x  | >= 4.2 |
 | 4.3.x  | >= 4.3 |
+
