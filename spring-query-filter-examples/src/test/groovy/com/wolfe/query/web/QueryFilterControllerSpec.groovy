@@ -1,4 +1,4 @@
-package org.wolfe.query.web
+package com.wolfe.query.web
 
 import groovyx.net.http.HTTPBuilder
 import org.apache.http.HttpStatus
@@ -8,7 +8,7 @@ import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.boot.test.WebIntegrationTest
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.web.context.WebApplicationContext
-import org.wolfe.Application
+import com.wolfe.Application
 import spock.lang.Specification
 
 @ContextConfiguration(loader = SpringApplicationContextLoader, classes = Application)
