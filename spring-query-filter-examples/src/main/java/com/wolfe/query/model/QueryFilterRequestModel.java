@@ -1,8 +1,7 @@
-package org.wolfe.query.model;
+package com.wolfe.query.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.wolfe.query.QueryParamOperator;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 

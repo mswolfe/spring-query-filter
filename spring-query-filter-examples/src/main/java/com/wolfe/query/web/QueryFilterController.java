@@ -1,11 +1,11 @@
-package org.wolfe.query.web;
+package com.wolfe.query.web;
 
+import org.wolfe.query.QueryParamFilter;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.wolfe.query.QueryParamFilter;
-import org.wolfe.query.model.QueryFilterRequestModel;
+import com.wolfe.query.model.QueryFilterRequestModel;
 
 import javax.validation.Valid;
 

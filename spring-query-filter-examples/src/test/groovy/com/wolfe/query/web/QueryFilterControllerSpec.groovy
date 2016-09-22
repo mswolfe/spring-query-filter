@@ -1,4 +1,4 @@
-package org.wolfe.query.web
+package com.wolfe.query.web
 
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.web.context.WebApplicationContext
-import org.wolfe.Application
+import com.wolfe.Application
 import spock.lang.Specification
 
 @ContextConfiguration
