@@ -5,6 +5,7 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 
@@ -26,6 +27,15 @@ dependencies {
     testRuntime 'cglib:cglib-nodep:3.1'
     testRuntime 'org.objenesis:objenesis:2.1'
 }
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+check.dependsOn jacocoTestReport
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'

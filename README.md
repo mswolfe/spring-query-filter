@@ -1,3 +1,6 @@
+[![codecov.io](https://codecov.io/github/mswolfe/spring-query-filter/coverage.svg?branch=master)](https://codecov.io/github/mswolfe/spring-query-filter?branch=master) [![Build Status](https://travis-ci.org/mswolfe/spring-query-filter.svg?branch=master)](https://travis-ci.org/mswolfe/spring-query-filter) 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.mswolfe/spring-query-filter/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.mswolfe/spring-query-filter)
+
 # spring-query-filter
 
 This library provides support for parsing and validating a 'filter' query parameter.
@@ -39,7 +42,7 @@ You get the idea!
 
 ## It's Simple to Use!
 
-Download the jar though [Maven Central](https://oss.sonatype.org/service/local/staging/deploy/maven2/com/github/mswolfe/spring-query-filter):
+Download the jar though [Maven Central](http://mvnrepository.com/artifact/com.github.mswolfe/spring-query-filter):
 
 or pull in into your maven project: 
 ```xml
