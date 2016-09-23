@@ -5,12 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyAccessor;
 import org.springframework.beans.PropertyAccessorFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindException;
@@ -34,7 +30,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Component
 public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final String filterParameterName;
@@ -46,10 +41,9 @@ public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodAr
 
     private static final Log log = LogFactory.getLog(QueryFilterHandlerMethodArgumentResolver.class);
 
-    @Autowired
     public QueryFilterHandlerMethodArgumentResolver(QueryFilterPatternProvider queryFilterPatternProvider,
                                                     ConversionService conversionService,
-                                                    @Qualifier("mvcValidator") Validator validator) {
+                                                    Validator validator) {
         this.filterPattern = queryFilterPatternProvider.getPattern();
         this.filterParameterDelimiter = queryFilterPatternProvider.getParameterDelimiter();
         this.filterParameterName = queryFilterPatternProvider.getParameterName();
