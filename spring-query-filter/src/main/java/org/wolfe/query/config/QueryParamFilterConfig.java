@@ -10,10 +10,13 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.validation.Validator;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.wolfe.query.QueryParamOperator;
 import org.wolfe.query.pattern.DefaultQueryFilterPatternProvider;
 import org.wolfe.query.pattern.QueryFilterPatternProvider;
 import org.wolfe.query.support.QueryFilterHandlerMethodArgumentResolver;
+import org.wolfe.query.validator.QueryParamOperatorValidator;
 
+import javax.validation.ConstraintValidator;
 import java.util.List;
 
 @Configuration
@@ -34,9 +37,16 @@ public class QueryParamFilterConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public QueryFilterHandlerMethodArgumentResolver getQueryFilterHandlerMethodArgumentResolver(QueryFilterPatternProvider queryFilterPatternProvider,
+    public ConstraintValidator<QueryParamOperator, String> queryParamOperatorValidator() {
+        return new QueryParamOperatorValidator();
+    }
+
+    @Bean
+    public QueryFilterHandlerMethodArgumentResolver queryFilterHandlerMethodArgumentResolver(QueryFilterPatternProvider queryFilterPatternProvider,
+                                                                                                ConstraintValidator<QueryParamOperator, String> queryParamOperatorValidator,
                                                                                                 ConversionService conversionService,
                                                                                                 @Qualifier("mvcValidator") Validator validator) {
-        return new QueryFilterHandlerMethodArgumentResolver(queryFilterPatternProvider, conversionService, validator);
+        return new QueryFilterHandlerMethodArgumentResolver(queryFilterPatternProvider, queryParamOperatorValidator,
+                conversionService, validator);
     }
 }

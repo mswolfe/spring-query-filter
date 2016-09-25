@@ -22,6 +22,7 @@ import org.wolfe.query.QueryParamOperator;
 import org.wolfe.query.pattern.QueryFilterPatternProvider;
 import org.wolfe.query.validator.QueryParamOperatorValidator;
 
+import javax.validation.ConstraintValidator;
 import javax.validation.Valid;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -39,15 +40,19 @@ public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodAr
     private final ConversionService conversionService;
     private final Validator validator;
 
+    private final ConstraintValidator<QueryParamOperator, String>  queryParamOperatorValidator;
+
     private static final Log log = LogFactory.getLog(QueryFilterHandlerMethodArgumentResolver.class);
 
     public QueryFilterHandlerMethodArgumentResolver(QueryFilterPatternProvider queryFilterPatternProvider,
+                                                    ConstraintValidator<QueryParamOperator, String> queryParamOperatorValidator,
                                                     ConversionService conversionService,
                                                     Validator validator) {
         this.filterPattern = queryFilterPatternProvider.getPattern();
         this.filterParameterDelimiter = queryFilterPatternProvider.getParameterDelimiter();
         this.filterParameterName = queryFilterPatternProvider.getParameterName();
 
+        this.queryParamOperatorValidator = queryParamOperatorValidator;
         this.conversionService = conversionService;
         this.validator = validator;
     }
@@ -150,13 +155,11 @@ public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodAr
 
             if (validator.supports(parameter.getParameterType())) {
                 validator.validate(arg, errors);
-
             }
 
             // Perform custom annotation validation, we do this because we want to support placing
             // the QueryParamOperator annotation on the property that stores the value and not force
             // users to always define a property that stores the operator.
-            QueryParamOperatorValidator queryParamOperatorValidator = new QueryParamOperatorValidator();
             for (Field f : parameter.getParameterType().getDeclaredFields()) {
                 for (Annotation a : f.getAnnotations()) {
                     if (a instanceof QueryParamOperator) {
@@ -169,7 +172,9 @@ public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodAr
 
                             queryParamOperatorValidator.initialize(op);
                             if (!queryParamOperatorValidator.isValid(value, null)) {
-                                errors.addError(new FieldError(parameter.getParameterName(), name, op.message()));
+                                String msg = String.format("%s; allowed values are: %s",
+                                        op.message(), StringUtils.arrayToCommaDelimitedString(op.allowed()));
+                                errors.addError(new FieldError(parameter.getParameterName(), name, msg));
                             }
                         }
                     }
@@ -183,27 +188,6 @@ public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodAr
     }
 
     /**
-     * Sets the filter property for the target Object with the property name of key.  This will only invoke
-     * the setter method on a POJO and will not inject into a field.
-     *
-     * @param target
-     * @param key
-     * @param value
-     * @return
-     */
-    private boolean setFilterProperty(Object target, String key, String value) {
-        if (setBeanProperty(target, key, value)) {
-            return true;
-        } else {
-            if (log.isErrorEnabled()) {
-                log.error(String.format("Failed to set the filter property for '%s=%s'", key, value));
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Sets the given target bean's name property to the given value.
      *
      * @param target
@@ -212,7 +196,7 @@ public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodAr
      * @return
      */
     @SuppressWarnings("unchecked")
-    private boolean setBeanProperty(Object target, String name, String value) {
+    private boolean setFilterProperty(Object target, String name, String value) {
         PropertyAccessor accessor = PropertyAccessorFactory.forBeanPropertyAccess(target);
         if (accessor != null && accessor.isWritableProperty(name)) {
             Class paramType = accessor.getPropertyType(name);
@@ -223,7 +207,7 @@ public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodAr
                         return true;
                     } catch (BeansException be) {
                         if (log.isErrorEnabled()) {
-                            log.warn(String.format("Failed to invoke setter method for '%s'", name));
+                            log.error(String.format("Failed to invoke setter method for '%s'", name), be);
                         }
                     }
                 } else {
@@ -232,13 +216,13 @@ public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodAr
                     }
                 }
             } else {
-                if (log.isErrorEnabled()) {
-                    log.error(String.format("Failed to invoke setter method for '%s'; could not determine parameter type.", name));
+                if (log.isWarnEnabled()) {
+                    log.warn(String.format("Failed to invoke setter method for '%s'; could not determine parameter type.", name));
                 }
             }
         } else {
-            if (log.isWarnEnabled()) {
-                log.warn(String.format("Property '%s' is not writable", name));
+            if (log.isTraceEnabled()) {
+                log.trace(String.format("Property '%s' is not found or is not writable", name));
             }
         }
 
