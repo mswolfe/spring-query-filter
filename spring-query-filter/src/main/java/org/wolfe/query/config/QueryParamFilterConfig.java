@@ -29,8 +29,14 @@ public class QueryParamFilterConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public QueryFilterHandlerMethodArgumentResolver getQueryFilterHandlerMethodArgumentResolver(ConversionService conversionService,
+    public QueryFilterPatternProvider queryFilterPatternProvider() {
+        return new DefaultQueryFilterPatternProvider();
+    }
+
+    @Bean
+    public QueryFilterHandlerMethodArgumentResolver getQueryFilterHandlerMethodArgumentResolver(QueryFilterPatternProvider queryFilterPatternProvider,
+                                                                                                ConversionService conversionService,
                                                                                                 @Qualifier("mvcValidator") Validator validator) {
-        return new QueryFilterHandlerMethodArgumentResolver(new DefaultQueryFilterPatternProvider(), conversionService, validator);
+        return new QueryFilterHandlerMethodArgumentResolver(queryFilterPatternProvider, conversionService, validator);
     }
 }
