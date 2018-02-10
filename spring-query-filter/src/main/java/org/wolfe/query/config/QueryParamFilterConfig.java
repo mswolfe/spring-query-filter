@@ -45,7 +45,7 @@ public class QueryParamFilterConfig extends WebMvcConfigurerAdapter {
     public QueryFilterHandlerMethodArgumentResolver queryFilterHandlerMethodArgumentResolver(QueryFilterPatternProvider queryFilterPatternProvider,
                                                                                                 ConstraintValidator<QueryParamOperator, String> queryParamOperatorValidator,
                                                                                                 ConversionService conversionService,
-                                                                                                @Qualifier("mvcValidator") Validator validator) {
+                                                                                                Validator validator) {
         return new QueryFilterHandlerMethodArgumentResolver(queryFilterPatternProvider, queryParamOperatorValidator,
                 conversionService, validator);
     }
