@@ -1,5 +1,5 @@
 group 'com.github.mswolfe'
-version '4.3.2-SNAPSHOT'
+version '4.3.2'
 
 apply plugin: 'java'
 apply plugin: 'groovy'
