@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.0.RELEASE'
+		springBootVersion = '1.5.10.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -12,7 +12,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'groovy'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
 
 jar {
 	baseName = 'spring-query-filter-examples'
@@ -31,7 +31,8 @@ dependencies {
 	compile project(':spring-query-filter')
 
 	testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
-	testCompile 'org.spockframework:spock-spring:1.0-groovy-2.4'
+	testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+	testCompile 'org.spockframework:spock-spring:1.1-groovy-2.4'
 	testCompile ('org.codehaus.groovy.modules.http-builder:http-builder:0.7.1') {
 		exclude module: "groovy"
 	}

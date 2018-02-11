@@ -1,9 +1,10 @@
 group 'com.github.mswolfe'
-version '4.3.1-SNAPSHOT'
+version '4.3.2-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'signing'
 apply plugin: 'jacoco'
 
@@ -14,7 +15,7 @@ repositories {
 }
 
 ext {
-    springVersion = '4.3.2.RELEASE'
+    springVersion = '4.3.14.RELEASE'
 }
 
 dependencies {
@@ -22,13 +23,13 @@ dependencies {
     compile "org.springframework:spring-context:${springVersion}"
     compile "org.springframework:spring-web:${springVersion}"
     compile "org.springframework:spring-webmvc:${springVersion}"
-    compile "org.springframework.boot:spring-boot-autoconfigure:1.4.0.RELEASE"
+    compile "org.springframework.boot:spring-boot-autoconfigure:1.5.10.RELEASE"
 
     compile 'commons-beanutils:commons-beanutils-core:1.8.3'
     compile 'javax.validation:validation-api:1.1.0.Final'
 
     testCompile 'org.codehaus.groovy:groovy-all:2.4.1'
-    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
     testRuntime 'cglib:cglib-nodep:3.1'
     testRuntime 'org.objenesis:objenesis:2.1'
 }
@@ -54,6 +55,18 @@ task sourcesJar(type: Jar) {
 
 artifacts {
     archives javadocJar, sourcesJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            version version
+            from components.java
+
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
 }
 
 signing {

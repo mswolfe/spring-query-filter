@@ -96,8 +96,8 @@ public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodAr
         if (!StringUtils.isEmpty(filter) && filter.length() > 2 && filter.startsWith("'") && filter.endsWith("'")) {
             String withOutParens = filter.substring(1, filter.length() - 1);
             String[] params = withOutParens.split(filterParameterDelimiter);
-            if (log.isInfoEnabled()) {
-                log.info(String.format("Found %s filter query parameters", params.length));
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Found %s filter query parameters", params.length));
             }
 
             for (String param : params) {
@@ -110,14 +110,14 @@ public class QueryFilterHandlerMethodArgumentResolver implements HandlerMethodAr
                     properties.put(key, value);
                     properties.put(key + "Operator", op);
                 } else {
-                    if (log.isWarnEnabled()) {
-                        log.warn(String.format("Failed to parse filter query parameter '%s'", param));
+                    if (log.isDebugEnabled()) {
+                        log.debug(String.format("Failed to parse filter query parameter '%s'", param));
                     }
                 }
             }
         } else {
-            if (log.isWarnEnabled()) {
-                log.warn(String.format("Failed to trim apostrophes from the filter '%s'", filter));
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Failed to trim apostrophes from the filter '%s'", filter));
             }
         }
 
